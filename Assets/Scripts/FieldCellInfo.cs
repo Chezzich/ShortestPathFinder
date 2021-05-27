@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class FieldCellInfo : MonoBehaviour
 {
-    public FieldCellType CellType; 
+    [SerializeField] private MeshRenderer meshRenderer;
+    [SerializeField] private Material emptyMaterial;
+    [SerializeField] private Material wallMaterial;
+    public FieldCellType CellType;
 
     public enum FieldCellType
     {
@@ -14,6 +17,20 @@ public class FieldCellInfo : MonoBehaviour
 
     private void OnMouseDown()
     {
-        
+        if (LabyrinthController.IsActiveBrushes)
+        {
+            CellType = LabyrinthController.ActiveBrushType;
+            switch (CellType)
+            {
+                case FieldCellType.Empty:
+                    meshRenderer.material = emptyMaterial;
+                    break;
+                case FieldCellType.Wall:
+                    meshRenderer.material = wallMaterial;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

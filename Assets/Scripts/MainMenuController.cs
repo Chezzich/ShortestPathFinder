@@ -13,6 +13,8 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private TMP_InputField fieldWidthInput;
     [SerializeField] private TMP_InputField fieldHeightInput;
     [SerializeField] private LabyrinthController labyrinthController;
+    [SerializeField] private Toggle brushesToggle;
+    [SerializeField] private TMP_Dropdown brushesDropdown;
 
     private void Awake()
     {
@@ -22,6 +24,9 @@ public class MainMenuController : MonoBehaviour
 
         fieldWidthInput.onValueChanged.AddListener(OnWidthValueChanged);
         fieldHeightInput.onValueChanged.AddListener(OnHeightValueChanged);
+
+        brushesToggle.onValueChanged.AddListener(OnBrushesToggleValueChanged);
+        brushesDropdown.onValueChanged.AddListener(OnBrushesDropdownValueChanged);
     }
 
     private void ClicksCatcherOnClick()
@@ -63,5 +68,16 @@ public class MainMenuController : MonoBehaviour
     private void GenerateWallsOnClick()
     {
         
+    }
+
+    private void OnBrushesToggleValueChanged(bool value)
+    {
+        LabyrinthController.IsActiveBrushes = value;
+        brushesDropdown.gameObject.SetActive(value);
+    }
+
+    private void OnBrushesDropdownValueChanged(int value)
+    {
+        LabyrinthController.ActiveBrushType = (FieldCellInfo.FieldCellType)value;
     }
 }
