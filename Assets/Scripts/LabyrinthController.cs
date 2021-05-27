@@ -8,28 +8,25 @@ public class LabyrinthController : MonoBehaviour
     [SerializeField] private GameObject fieldCellPrefab;
     [SerializeField] private Transform fieldTransform;
 
-    private int labyrinthWidth, labyrinthHeight;
+    public int LabyrinthWidth { get; set; }
+    public int LabyrinthHeight { get; set; }
+
+    private const int DEFAULT_FIELD_SIZE = 10;
 
     private void Awake()
     {
-        GenerateLabyrinth();
+        LabyrinthWidth = DEFAULT_FIELD_SIZE;
+        LabyrinthHeight = DEFAULT_FIELD_SIZE;
     }
 
-    private void GenerateLabyrinth()
+    public void GenerateField()
     {
-        GetLabyrinthWidthAndHeight();
-        for (int i = 0; i < labyrinthWidth; i++)
+        for (int i = 0; i < LabyrinthWidth; i++)
         {
-            for (int j = 0; j < labyrinthHeight; j++)
+            for (int j = 0; j < LabyrinthHeight; j++)
             {
                 Instantiate(fieldCellPrefab, new Vector3(i, j), Quaternion.identity, fieldTransform);
             }
         }
-    }
-
-    private void GetLabyrinthWidthAndHeight()
-    {
-        labyrinthWidth = 10;
-        labyrinthHeight = 10;
     }
 }
