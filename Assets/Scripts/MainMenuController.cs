@@ -10,6 +10,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private Button clicksCatcherButton;
     [SerializeField] private Button generateFieldButton;
     [SerializeField] private Button generateWallsButton;
+    [SerializeField] private Button findPathButton;
     [SerializeField] private TMP_InputField fieldWidthInput;
     [SerializeField] private TMP_InputField fieldHeightInput;
     [SerializeField] private LabyrinthController labyrinthController;
@@ -21,6 +22,7 @@ public class MainMenuController : MonoBehaviour
         clicksCatcherButton.onClick.AddListener(ClicksCatcherOnClick);
         generateFieldButton.onClick.AddListener(GenerateFieldOnClick);
         generateWallsButton.onClick.AddListener(GenerateWallsOnClick);
+        findPathButton.onClick.AddListener(FindPathOnClick);
 
         fieldWidthInput.onValueChanged.AddListener(OnWidthValueChanged);
         fieldHeightInput.onValueChanged.AddListener(OnHeightValueChanged);
@@ -79,5 +81,10 @@ public class MainMenuController : MonoBehaviour
     private void OnBrushesDropdownValueChanged(int value)
     {
         LabyrinthController.ActiveBrushType = (FieldCellInfo.FieldCellType)value;
+    }
+
+    private void FindPathOnClick()
+    {
+        labyrinthController.FindPath();
     }
 }

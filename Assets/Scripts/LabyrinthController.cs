@@ -18,6 +18,9 @@ public class LabyrinthController : MonoBehaviour
 
     private List<FieldCellInfo> fieldCells;
 
+    private FieldCellInfo startCell;
+    private FieldCellInfo endCell;
+
     private void Awake()
     {
         LabyrinthWidth = DEFAULT_FIELD_SIZE;
@@ -40,8 +43,28 @@ public class LabyrinthController : MonoBehaviour
             for (int j = 0; j < LabyrinthHeight; j++)
             {
                 currentCell = Instantiate(fieldCellPrefab, new Vector3(i, j), Quaternion.identity, fieldTransform).GetComponent<FieldCellInfo>();
+                currentCell.SetLabyrinthController(this);
                 fieldCells.Add(currentCell);
             }
         }
+    }
+
+    public void SetStartCell(FieldCellInfo cell)
+    {
+        if (startCell)
+            startCell.SetCellType(FieldCellInfo.FieldCellType.Empty);
+        startCell = cell;
+    }
+
+    public void SetEndCell(FieldCellInfo cell)
+    {
+        if (endCell)
+            endCell.SetCellType(FieldCellInfo.FieldCellType.Empty);
+        endCell = cell;
+    }
+
+    public void FindPath()
+    {
+
     }
 }
