@@ -44,6 +44,7 @@ public class LabyrinthController : MonoBehaviour
             {
                 currentCell = Instantiate(fieldCellPrefab, new Vector3(i, j), Quaternion.identity, fieldTransform).GetComponent<FieldCellInfo>();
                 currentCell.SetLabyrinthController(this);
+                currentCell.Position = new Vector2(i, j);
                 fieldCells.Add(currentCell);
             }
         }
@@ -66,5 +67,42 @@ public class LabyrinthController : MonoBehaviour
     public void FindPath()
     {
 
+    }
+
+
+    public void GenerateWalls()
+    {
+        FieldCellInfo cell;
+        for (int j = LabyrinthHeight - 1; j >= 0; j--)
+        {
+            for (int i = 0; i < LabyrinthWidth; i++)
+            {
+                cell = GetCellAtPoint(new Vector2(i, j));
+                if (cell.GetCellType() == FieldCellInfo.FieldCellType.Empty)
+                {
+                    if (cell.Position.x == 0 || cell.Position.x == LabyrinthWidth - 1
+                        || cell.Position.y == 0 || cell.Position.y == LabyrinthHeight - 1)
+                        cell.SetCellType(FieldCellInfo.FieldCellType.Wall);
+                    else
+                    {
+                        bool isUpperWall = GetCellAtPoint(new Vector2(cell.Position.x, cell.Position.y + 1))?.GetCellType() == FieldCellInfo.FieldCellType.Wall;
+                        bool isUpperLeftCorner = GetCellAtPoint(new Vector2(cell.Position.x + 1, cell.Position.y + 1))?.GetCellType() == FieldCellInfo.FieldCellType.Wall;
+                        bool isLeftRightWalls = (GetCellAtPoint(new Vector2(cell.Position.x - 1, cell.Position.y))?.GetCellType() == FieldCellInfo.FieldCellType.Wall
+                                            || GetCellAtPoint(new Vector2(cell.Position.x + 1, cell.Position.y))?.GetCellType() == FieldCellInfo.FieldCellType.Wall);
+
+
+                        if ((isUpperWall && isLeftRightWalls) || isUpperLeftCorner)
+                            cell.SetCellType(FieldCellInfo.FieldCellType.Empty);
+                        else
+                            cell.SetCellType(UnityEngine.Random.Range(0, 2) == 0 ? FieldCellInfo.FieldCellType.Wall : FieldCellInfo.FieldCellType.Empty);
+                    }
+                }
+            }
+        }
+    }
+
+    private FieldCellInfo GetCellAtPoint(Vector2 point)
+    {
+        return fieldCells.Find((cell) => cell.Position == point);
     }
 }

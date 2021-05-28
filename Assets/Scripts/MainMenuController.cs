@@ -69,7 +69,7 @@ public class MainMenuController : MonoBehaviour
 
     private void GenerateWallsOnClick()
     {
-        
+        labyrinthController.GenerateWalls();
     }
 
     private void OnBrushesToggleValueChanged(bool value)

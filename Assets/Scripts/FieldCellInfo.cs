@@ -10,9 +10,11 @@ public class FieldCellInfo : MonoBehaviour
     [SerializeField] private Material startPointMaterial;
     [SerializeField] private Material endPointMaterial;
 
-    public FieldCellType CellType;
+    private FieldCellType cellType;
 
     private LabyrinthController labyrinthController;
+
+    public Vector2 Position { get; set; }
 
     public enum FieldCellType
     {
@@ -35,14 +37,16 @@ public class FieldCellInfo : MonoBehaviour
         labyrinthController = controller;
     }
 
-    public void SetCellType(FieldCellType cellType)
+    public void SetCellType(FieldCellType newCellType)
     {
-        if (CellType == FieldCellType.StartPoint)
+        if (cellType == FieldCellType.StartPoint)
             labyrinthController.SetStartCell(null);
-        else if (CellType == FieldCellType.EndPoint)
+        else if (cellType == FieldCellType.EndPoint)
             labyrinthController.SetEndCell(null);
 
-        switch (cellType)
+        cellType = newCellType;
+
+        switch (newCellType)
         {
             case FieldCellType.Empty:
                 meshRenderer.material = emptyMaterial;
@@ -61,5 +65,10 @@ public class FieldCellInfo : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public FieldCellType GetCellType()
+    {
+        return cellType;
     }
 }
