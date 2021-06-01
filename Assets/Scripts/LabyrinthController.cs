@@ -27,6 +27,8 @@ public class LabyrinthController : MonoBehaviour
         LabyrinthHeight = DEFAULT_FIELD_SIZE;
         IsActiveBrushes = false;
         fieldCells = new List<FieldCellInfo>();
+        startCell = null;
+        endCell = null;
     }
 
     public void GenerateField()
@@ -99,6 +101,9 @@ public class LabyrinthController : MonoBehaviour
                 }
             }
         }
+
+        fieldCells.Find((el) => el.GetCellType() == FieldCellInfo.FieldCellType.Empty).SetCellType(FieldCellInfo.FieldCellType.StartPoint);
+        fieldCells.FindLast((el) => el.GetCellType() == FieldCellInfo.FieldCellType.Empty).SetCellType(FieldCellInfo.FieldCellType.EndPoint);
     }
 
     private FieldCellInfo GetCellAtPoint(Vector2 point)
