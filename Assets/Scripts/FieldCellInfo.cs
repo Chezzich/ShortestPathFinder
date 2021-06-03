@@ -14,7 +14,7 @@ public class FieldCellInfo : MonoBehaviour
 
     private LabyrinthController labyrinthController;
 
-    public Vector2 Position { get; set; }
+    public Vector2Int Position { get; set; }
 
     public enum FieldCellType
     {
@@ -39,9 +39,9 @@ public class FieldCellInfo : MonoBehaviour
 
     public void SetCellType(FieldCellType newCellType)
     {
-        if (cellType == FieldCellType.StartPoint)
+        if (newCellType == FieldCellType.StartPoint)
             labyrinthController.SetStartCell(null);
-        else if (cellType == FieldCellType.EndPoint)
+        else if (newCellType == FieldCellType.EndPoint)
             labyrinthController.SetEndCell(null);
 
         cellType = newCellType;
@@ -70,5 +70,10 @@ public class FieldCellInfo : MonoBehaviour
     public FieldCellType GetCellType()
     {
         return cellType;
+    }
+
+    public void ShowPathPoint()
+    {
+        meshRenderer.material = startPointMaterial;
     }
 }

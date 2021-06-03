@@ -46,7 +46,7 @@ public class LabyrinthController : MonoBehaviour
             {
                 currentCell = Instantiate(fieldCellPrefab, new Vector3(i, j), Quaternion.identity, fieldTransform).GetComponent<FieldCellInfo>();
                 currentCell.SetLabyrinthController(this);
-                currentCell.Position = new Vector2(i, j);
+                currentCell.Position = new Vector2Int(i, j);
                 fieldCells.Add(currentCell);
             }
         }
@@ -54,7 +54,7 @@ public class LabyrinthController : MonoBehaviour
 
     public void SetStartCell(FieldCellInfo cell)
     {
-        if (startCell)
+        if (startCell != null)
             startCell.SetCellType(FieldCellInfo.FieldCellType.Empty);
         startCell = cell;
     }
@@ -68,7 +68,16 @@ public class LabyrinthController : MonoBehaviour
 
     public void FindPath()
     {
-
+        if (startCell && endCell)
+        {
+            SquareGrid grid = new SquareGrid(LabyrinthWidth, LabyrinthHeight, fieldCells);
+            AStarSearch aStarSearch = new AStarSearch(grid, startCell.Position, endCell.Position);
+            List<Vector2Int> path = aStarSearch.GetPath();
+            foreach (var item in path)
+            {
+                GetCellAtPoint(new Vector2Int(item.x, item.y)).ShowPathPoint();
+            }
+        }
     }
 
 
@@ -79,7 +88,7 @@ public class LabyrinthController : MonoBehaviour
         {
             for (int i = 0; i < LabyrinthWidth; i++)
             {
-                cell = GetCellAtPoint(new Vector2(i, j));
+                cell = GetCellAtPoint(new Vector2Int(i, j));
                 if (cell.GetCellType() == FieldCellInfo.FieldCellType.Empty)
                 {
                     if (cell.Position.x == 0 || cell.Position.x == LabyrinthWidth - 1
@@ -87,10 +96,10 @@ public class LabyrinthController : MonoBehaviour
                         cell.SetCellType(FieldCellInfo.FieldCellType.Wall);
                     else
                     {
-                        bool isUpperWall = GetCellAtPoint(new Vector2(cell.Position.x, cell.Position.y + 1))?.GetCellType() == FieldCellInfo.FieldCellType.Wall;
-                        bool isUpperLeftCorner = GetCellAtPoint(new Vector2(cell.Position.x + 1, cell.Position.y + 1))?.GetCellType() == FieldCellInfo.FieldCellType.Wall;
-                        bool isLeftRightWalls = (GetCellAtPoint(new Vector2(cell.Position.x - 1, cell.Position.y))?.GetCellType() == FieldCellInfo.FieldCellType.Wall
-                                            || GetCellAtPoint(new Vector2(cell.Position.x + 1, cell.Position.y))?.GetCellType() == FieldCellInfo.FieldCellType.Wall);
+                        bool isUpperWall = GetCellAtPoint(new Vector2Int(cell.Position.x, cell.Position.y + 1))?.GetCellType() == FieldCellInfo.FieldCellType.Wall;
+                        bool isUpperLeftCorner = GetCellAtPoint(new Vector2Int(cell.Position.x + 1, cell.Position.y + 1))?.GetCellType() == FieldCellInfo.FieldCellType.Wall;
+                        bool isLeftRightWalls = (GetCellAtPoint(new Vector2Int(cell.Position.x - 1, cell.Position.y))?.GetCellType() == FieldCellInfo.FieldCellType.Wall
+                                            || GetCellAtPoint(new Vector2Int(cell.Position.x + 1, cell.Position.y))?.GetCellType() == FieldCellInfo.FieldCellType.Wall);
 
 
                         if ((isUpperWall && isLeftRightWalls) || isUpperLeftCorner)
@@ -106,7 +115,7 @@ public class LabyrinthController : MonoBehaviour
         fieldCells.FindLast((el) => el.GetCellType() == FieldCellInfo.FieldCellType.Empty).SetCellType(FieldCellInfo.FieldCellType.EndPoint);
     }
 
-    private FieldCellInfo GetCellAtPoint(Vector2 point)
+    private FieldCellInfo GetCellAtPoint(Vector2Int point)
     {
         return fieldCells.Find((cell) => cell.Position == point);
     }
