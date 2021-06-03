@@ -48,9 +48,9 @@ public class SquareGrid
     {
         if (AStarSearch.Heuristic(beginCellPosition, endCellPosition) == 2f) //diagonal movement
         {
-            return (int)field[endCellPosition.x, endCellPosition.y].GetCellMovePrice() * Mathf.Sqrt(2f);
+            return field[endCellPosition.x, endCellPosition.y].GetCellMovePrice() * Mathf.Sqrt(2f);
         }
-        return (int)field[endCellPosition.x, endCellPosition.y].GetCellMovePrice();
+        return field[endCellPosition.x, endCellPosition.y].GetCellMovePrice();
     }
 
     public IEnumerable<Vector2Int> GetNeighbors(Vector2Int cellPosition)
