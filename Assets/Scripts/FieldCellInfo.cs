@@ -72,6 +72,27 @@ public class FieldCellInfo : MonoBehaviour
         return cellType;
     }
 
+    public int GetCellMovePrice()
+    {
+        int price = 0;
+        switch (cellType)
+        {
+            case FieldCellType.Empty:
+                price = 1;
+                break;
+            case FieldCellType.Wall:
+                price = int.MaxValue;
+                break;
+            case FieldCellType.StartPoint:
+                price = 1;
+                break;
+            case FieldCellType.EndPoint:
+                price = 1;
+                break;
+        }
+        return price;
+    }
+
     public void ShowPathPoint()
     {
         meshRenderer.material = startPointMaterial;

@@ -4,14 +4,14 @@ using UnityEngine;
 public class SquareGrid
 {
     public static readonly Vector2Int[] DIRS = new[] {
-    new Vector2Int(1, 0),
-    new Vector2Int(-1, 0),
-    new Vector2Int(0, -1),
-    new Vector2Int(0, 1),
     new Vector2Int(1, 1),
     new Vector2Int(-1, 1),
     new Vector2Int(1, -1),
-    new Vector2Int(-1, -1)
+    new Vector2Int(-1, -1),
+    new Vector2Int(1, 0),
+    new Vector2Int(-1, 0),
+    new Vector2Int(0, -1),
+    new Vector2Int(0, 1)
     };
 
     public SquareGrid(int width, int height, List<FieldCellInfo> cellsList)
@@ -48,9 +48,9 @@ public class SquareGrid
     {
         if (AStarSearch.Heuristic(beginCellPosition, endCellPosition) == 2f) //diagonal movement
         {
-            return (int)field[endCellPosition.x, endCellPosition.y].GetCellType() * Mathf.Sqrt(2f);
+            return (int)field[endCellPosition.x, endCellPosition.y].GetCellMovePrice() * Mathf.Sqrt(2f);
         }
-        return (int)field[endCellPosition.x, endCellPosition.y].GetCellType();
+        return (int)field[endCellPosition.x, endCellPosition.y].GetCellMovePrice();
     }
 
     public IEnumerable<Vector2Int> GetNeighbors(Vector2Int cellPosition)
