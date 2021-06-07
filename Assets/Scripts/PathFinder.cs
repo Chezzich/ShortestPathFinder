@@ -25,7 +25,7 @@ public class SquareGrid
         {
             for (int j = 0; j < field.GetLength(1); j++)
             {
-                field[i,j] = cellsList.Find((cell) => cell.Position.x == i && cell.Position.y == j);
+                field[i, j] = cellsList.Find((cell) => cell.Position.x == i && cell.Position.y == j);
             }
         }
     }
@@ -65,7 +65,7 @@ public class SquareGrid
         }
     }
 
-    private FieldCellInfo GetCellAtPoint(int x, int y)
+    public FieldCellInfo GetCellAtPoint(int x, int y)
     {
         for (int i = 0; i < field.GetLength(0); i++)
         {
@@ -161,6 +161,7 @@ public class AStarSearch
 
                     costs.Add(neighbor, newCost);
                     pathPossiblePositions.Add(neighbor, currentPos);
+                    fieldGrid.GetCellAtPoint(neighbor.x, neighbor.y).ShowPathPossiblePoint();
                     float priority = newCost + Heuristic(neighbor, endPointPosition);
                     cellsQueue.Enqueue(neighbor, priority);
                 }

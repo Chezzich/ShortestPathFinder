@@ -73,13 +73,18 @@ public class LabyrinthController : MonoBehaviour
             SquareGrid grid = new SquareGrid(LabyrinthWidth, LabyrinthHeight, fieldCells);
             AStarSearch aStarSearch = new AStarSearch(grid, startCell.Position, endCell.Position);
             List<Vector2Int> path = aStarSearch.GetPath();
-            foreach (var item in path)
-            {
-                GetCellAtPoint(new Vector2Int(item.x, item.y)).ShowPathPoint();
-            }
+            StartCoroutine(ShowPath(path));
         }
     }
 
+    private IEnumerator ShowPath(List<Vector2Int> path)
+    {
+        foreach (var item in path)
+        {
+            GetCellAtPoint(new Vector2Int(item.x, item.y)).ShowPathPoint();
+            yield return new WaitForSeconds(1f);
+        }
+    }
 
     public void GenerateWalls()
     {

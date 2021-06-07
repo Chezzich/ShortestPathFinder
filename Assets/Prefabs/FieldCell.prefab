@@ -100,7 +100,7 @@ MonoBehaviour:
   wallMaterial: {fileID: 2100000, guid: d22add42647a281448af41d68792bd57, type: 2}
   startPointMaterial: {fileID: 2100000, guid: f7022f0eaa4297f42b86a54815fd154d, type: 2}
   endPointMaterial: {fileID: 2100000, guid: b106ded9c619be744bbb036beceea219, type: 2}
-  CellType: 0
+  possiblePathPointMaterial: {fileID: 2100000, guid: 27fb57e8007a1654286aba15705b1ea2, type: 2}
 --- !u!65 &-1698894184590525342
 BoxCollider:
   m_ObjectHideFlags: 0

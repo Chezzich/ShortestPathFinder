@@ -9,6 +9,7 @@ public class FieldCellInfo : MonoBehaviour
     [SerializeField] private Material wallMaterial;
     [SerializeField] private Material startPointMaterial;
     [SerializeField] private Material endPointMaterial;
+    [SerializeField] private Material possiblePathPointMaterial;
 
     private FieldCellType cellType;
 
@@ -96,5 +97,10 @@ public class FieldCellInfo : MonoBehaviour
     public void ShowPathPoint()
     {
         meshRenderer.material = startPointMaterial;
+    }
+
+    public void ShowPathPossiblePoint()
+    {
+        meshRenderer.material = possiblePathPointMaterial;
     }
 }
