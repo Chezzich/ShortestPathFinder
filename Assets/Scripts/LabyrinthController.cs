@@ -117,6 +117,8 @@ public class LabyrinthController : MonoBehaviour
             }
         }
 
+        ClearSecondLastRow();
+
         fieldCells.Find((el) => el.GetCellType() == FieldCellInfo.FieldCellType.Empty).SetCellType(FieldCellInfo.FieldCellType.StartPoint);
         fieldCells.FindLast((el) => el.GetCellType() == FieldCellInfo.FieldCellType.Empty).SetCellType(FieldCellInfo.FieldCellType.EndPoint);
     }
@@ -124,5 +126,22 @@ public class LabyrinthController : MonoBehaviour
     private FieldCellInfo GetCellAtPoint(Vector2Int point)
     {
         return fieldCells.Find((cell) => cell.Position == point);
+    }
+    private void ClearSecondLastRow()
+    {
+        FieldCellInfo cell;
+        for (int i = 0; i < LabyrinthWidth; i++)
+        {
+            cell = GetCellAtPoint(new Vector2Int(i, 1));
+            if (cell.GetCellType() == FieldCellInfo.FieldCellType.Empty)
+            {
+                if (GetCellAtPoint(new Vector2Int(cell.Position.x, cell.Position.y + 1))?.GetCellType() == FieldCellInfo.FieldCellType.Wall
+                    && GetCellAtPoint(new Vector2Int(cell.Position.x - 1, cell.Position.y + 1))?.GetCellType() == FieldCellInfo.FieldCellType.Wall
+                    && GetCellAtPoint(new Vector2Int(cell.Position.x + 1, cell.Position.y))?.GetCellType() == FieldCellInfo.FieldCellType.Wall)
+                {
+                    GetCellAtPoint(new Vector2Int(cell.Position.x + 1, cell.Position.y))?.SetCellType(FieldCellInfo.FieldCellType.Empty);
+                }
+            }
+        }
     }
 }
