@@ -29,6 +29,7 @@ public class PathFinder : MonoBehaviour
         cellsQueue.Enqueue(startPointPosition, 0f);
 
         pathPossiblePositions.Clear();
+        costs.Clear();
         pathPossiblePositions.Add(startPointPosition, startPointPosition);
         costs.Add(startPointPosition, 0f);
 
