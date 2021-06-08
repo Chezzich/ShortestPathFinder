@@ -13,6 +13,7 @@ public class LabyrinthController : MonoBehaviour
     public int LabyrinthHeight { get; set; }
     
     public static bool IsActiveBrushes { get; set; }
+    public static bool IsActiveAnimations { get; set; }
     public static FieldCellInfo.FieldCellType ActiveBrushType { get; set; }
 
     private const int DEFAULT_FIELD_SIZE = 10;
@@ -83,7 +84,8 @@ public class LabyrinthController : MonoBehaviour
         foreach (var item in path)
         {
             GetCellAtPoint(new Vector2Int(item.x, item.y)).ShowPathPoint();
-            yield return new WaitForSeconds(0.5f);
+            if (LabyrinthController.IsActiveAnimations)
+                yield return new WaitForSeconds(0.2f);
         }
     }
 

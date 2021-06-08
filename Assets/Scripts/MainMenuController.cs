@@ -15,6 +15,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private TMP_InputField fieldHeightInput;
     [SerializeField] private LabyrinthController labyrinthController;
     [SerializeField] private Toggle brushesToggle;
+    [SerializeField] private Toggle animsToggle;
     [SerializeField] private TMP_Dropdown brushesDropdown;
 
     private void Awake()
@@ -27,6 +28,7 @@ public class MainMenuController : MonoBehaviour
         fieldWidthInput.onValueChanged.AddListener(OnWidthValueChanged);
         fieldHeightInput.onValueChanged.AddListener(OnHeightValueChanged);
 
+        animsToggle.onValueChanged.AddListener(OnAnimsToggleValueChanged);
         brushesToggle.onValueChanged.AddListener(OnBrushesToggleValueChanged);
         brushesDropdown.onValueChanged.AddListener(OnBrushesDropdownValueChanged);
     }
@@ -86,5 +88,10 @@ public class MainMenuController : MonoBehaviour
     private void FindPathOnClick()
     {
         StartCoroutine(labyrinthController.FindPath());
+    }
+
+    private void OnAnimsToggleValueChanged(bool value)
+    {
+        LabyrinthController.IsActiveAnimations = value;
     }
 }

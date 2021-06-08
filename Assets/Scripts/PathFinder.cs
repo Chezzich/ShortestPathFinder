@@ -28,6 +28,7 @@ public class PathFinder : MonoBehaviour
         var cellsQueue = new PriorityQueue<Vector2Int>();
         cellsQueue.Enqueue(startPointPosition, 0f);
 
+        pathPossiblePositions.Clear();
         pathPossiblePositions.Add(startPointPosition, startPointPosition);
         costs.Add(startPointPosition, 0f);
 
@@ -53,7 +54,8 @@ public class PathFinder : MonoBehaviour
                     costs.Add(neighbor, newCost);
                     pathPossiblePositions.Add(neighbor, currentPos);
                     fieldGrid.GetCellAtPoint(neighbor.x, neighbor.y).ShowPathPossiblePoint();
-                    yield return new WaitForSeconds(0.3f);
+                    if (LabyrinthController.IsActiveAnimations)
+                        yield return new WaitForSeconds(0.3f);
                     float priority = newCost + Heuristic(neighbor, endPointPosition);
                     cellsQueue.Enqueue(neighbor, priority);
                 }
