@@ -7,6 +7,7 @@ public class LabyrinthController : MonoBehaviour
 {
     [SerializeField] private GameObject fieldCellPrefab;
     [SerializeField] private Transform fieldTransform;
+    [SerializeField] private PathFinder aStarSearch;
 
     public int LabyrinthWidth { get; set; }
     public int LabyrinthHeight { get; set; }
@@ -66,12 +67,12 @@ public class LabyrinthController : MonoBehaviour
         endCell = cell;
     }
 
-    public void FindPath()
+    public IEnumerator FindPath()
     {
         if (startCell && endCell)
         {
             SquareGrid grid = new SquareGrid(LabyrinthWidth, LabyrinthHeight, fieldCells);
-            AStarSearch aStarSearch = new AStarSearch(grid, startCell.Position, endCell.Position);
+            yield return StartCoroutine(aStarSearch.Init(grid, startCell.Position, endCell.Position));
             List<Vector2Int> path = aStarSearch.GetPath();
             StartCoroutine(ShowPath(path));
         }
@@ -82,7 +83,7 @@ public class LabyrinthController : MonoBehaviour
         foreach (var item in path)
         {
             GetCellAtPoint(new Vector2Int(item.x, item.y)).ShowPathPoint();
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 

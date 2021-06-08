@@ -85,6 +85,6 @@ public class MainMenuController : MonoBehaviour
 
     private void FindPathOnClick()
     {
-        labyrinthController.FindPath();
+        StartCoroutine(labyrinthController.FindPath());
     }
 }

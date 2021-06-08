@@ -1,5 +1,85 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+
+public class PathFinder : MonoBehaviour
+{
+    private Dictionary<Vector2Int, Vector2Int> pathPossiblePositions = new Dictionary<Vector2Int, Vector2Int>();
+    private Dictionary<Vector2Int, float> costs = new Dictionary<Vector2Int, float>();
+
+    private Vector2Int startPointPosition;
+    private Vector2Int endPointPosition;
+
+    static public float Heuristic(Vector2Int a, Vector2Int b)
+    {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+    }
+
+    public IEnumerator Init(SquareGrid fieldGrid, Vector2Int startPos, Vector2Int endPos)
+    {
+        startPointPosition = startPos;
+        endPointPosition = endPos;
+
+        yield return StartCoroutine(FindPath(fieldGrid));
+    }
+
+    private IEnumerator FindPath(SquareGrid fieldGrid)
+    {
+        var cellsQueue = new PriorityQueue<Vector2Int>();
+        cellsQueue.Enqueue(startPointPosition, 0f);
+
+        pathPossiblePositions.Add(startPointPosition, startPointPosition);
+        costs.Add(startPointPosition, 0f);
+
+        while (cellsQueue.Count > 0)
+        {
+            Vector2Int currentPos = cellsQueue.Dequeue();
+
+            if (currentPos.Equals(endPointPosition))
+                break;
+
+            foreach (var neighbor in fieldGrid.GetNeighbors(currentPos))
+            {
+                float newCost = costs[currentPos] + fieldGrid.Cost(currentPos, neighbor);
+
+                if (!costs.ContainsKey(neighbor) || newCost < costs[neighbor])
+                {
+                    if (costs.ContainsKey(neighbor))
+                    {
+                        costs.Remove(neighbor);
+                        pathPossiblePositions.Remove(neighbor);
+                    }
+
+                    costs.Add(neighbor, newCost);
+                    pathPossiblePositions.Add(neighbor, currentPos);
+                    fieldGrid.GetCellAtPoint(neighbor.x, neighbor.y).ShowPathPossiblePoint();
+                    yield return new WaitForSeconds(0.3f);
+                    float priority = newCost + Heuristic(neighbor, endPointPosition);
+                    cellsQueue.Enqueue(neighbor, priority);
+                }
+            }
+        }
+    }
+
+    public List<Vector2Int> GetPath()
+    {
+        List<Vector2Int> path = new List<Vector2Int>();
+        Vector2Int currentPos = endPointPosition;
+
+        while (!currentPos.Equals(startPointPosition))
+        {
+            if (!pathPossiblePositions.ContainsKey(currentPos))
+            {
+                return new List<Vector2Int>();
+            }
+            path.Add(currentPos);
+            currentPos = pathPossiblePositions[currentPos];
+        }
+
+        path.Reverse();
+        return path;
+    }
+}
 
 public class SquareGrid
 {
@@ -46,7 +126,7 @@ public class SquareGrid
 
     public float Cost(Vector2Int beginCellPosition, Vector2Int endCellPosition)
     {
-        if (AStarSearch.Heuristic(beginCellPosition, endCellPosition) == 2f) //diagonal movement
+        if (PathFinder.Heuristic(beginCellPosition, endCellPosition) == 2f) //diagonal movement
         {
             return field[endCellPosition.x, endCellPosition.y].GetCellMovePrice() * Mathf.Sqrt(2f);
         }
@@ -110,82 +190,3 @@ public class PriorityQueue<T>
         return bestItem;
     }
 }
-
-public class AStarSearch
-{
-    private Dictionary<Vector2Int, Vector2Int> pathPossiblePositions = new Dictionary<Vector2Int, Vector2Int>();
-    private Dictionary<Vector2Int, float> costs = new Dictionary<Vector2Int, float>();
-
-    private Vector2Int startPointPosition;
-    private Vector2Int endPointPosition;
-
-    static public float Heuristic(Vector2Int a, Vector2Int b)
-    {
-        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
-    }
-
-    public AStarSearch(SquareGrid fieldGrid, Vector2Int startPos, Vector2Int endPos)
-    {
-        startPointPosition = startPos;
-        endPointPosition = endPos;
-
-        FindPath(fieldGrid);
-    }
-
-    private void FindPath(SquareGrid fieldGrid)
-    {
-        var cellsQueue = new PriorityQueue<Vector2Int>();
-        cellsQueue.Enqueue(startPointPosition, 0f);
-
-        pathPossiblePositions.Add(startPointPosition, startPointPosition);
-        costs.Add(startPointPosition, 0f);
-
-        while (cellsQueue.Count > 0)
-        {
-            Vector2Int currentPos = cellsQueue.Dequeue();
-
-            if (currentPos.Equals(endPointPosition))
-                break;
-
-            foreach (var neighbor in fieldGrid.GetNeighbors(currentPos))
-            {
-                float newCost = costs[currentPos] + fieldGrid.Cost(currentPos, neighbor);
-
-                if (!costs.ContainsKey(neighbor) || newCost < costs[neighbor])
-                {
-                    if (costs.ContainsKey(neighbor))
-                    {
-                        costs.Remove(neighbor);
-                        pathPossiblePositions.Remove(neighbor);
-                    }
-
-                    costs.Add(neighbor, newCost);
-                    pathPossiblePositions.Add(neighbor, currentPos);
-                    fieldGrid.GetCellAtPoint(neighbor.x, neighbor.y).ShowPathPossiblePoint();
-                    float priority = newCost + Heuristic(neighbor, endPointPosition);
-                    cellsQueue.Enqueue(neighbor, priority);
-                }
-            }
-        }
-    }
-
-    public List<Vector2Int> GetPath()
-    {
-        List<Vector2Int> path = new List<Vector2Int>();
-        Vector2Int currentPos = endPointPosition;
-
-        while (!currentPos.Equals(startPointPosition))
-        {
-            if (!pathPossiblePositions.ContainsKey(currentPos))
-            {
-                return new List<Vector2Int>();
-            }
-            path.Add(currentPos);
-            currentPos = pathPossiblePositions[currentPos];
-        }
-
-        path.Reverse();
-        return path;
-    }
-}
-
